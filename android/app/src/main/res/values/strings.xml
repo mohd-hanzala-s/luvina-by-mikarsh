@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Luvina</string>
+    <string name="splash_maker">BY MIKARSH</string>
+    <string name="splash_tagline">Understand your cycle. Embrace your flow.</string>
+    <string name="error_title">Couldn\'t start Luvina</string>
+    <string name="error_message">The bundled app could not be loaded. Please try again.</string>
+    <string name="error_bundle_missing">The bundled app is missing from this build. Rebuild the APK from the repository root with `pnpm android:sync`, then try again.</string>
+    <string name="error_retry">Retry</string>
+</resources>

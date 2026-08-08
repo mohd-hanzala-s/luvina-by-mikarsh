@@ -1,0 +1,727 @@
+PROJECT BRIEF
+
+Create a production-ready, premium Progressive Web Application (PWA) named Luna that helps users track their menstrual cycles.
+
+This is not intended to be a medical application. It should be a beautifully designed, highly intuitive personal health tracker that focuses on doing a few things exceptionally well.
+
+The application must feel comparable to a polished commercial product rather than an open-source demo or student project.
+
+The final deliverable should be complete, production-ready, and immediately deployable.
+
+---
+
+PRIMARY OBJECTIVES
+
+Design an application that is:
+
+- Installable as a Progressive Web App
+- Fully functional offline
+- Extremely fast
+- Mobile-first
+- Tablet optimized
+- Responsive on desktop
+- Elegant and premium
+- Privacy-first
+- No subscription services
+- No third-party analytics
+- No advertisements
+- No unnecessary complexity
+
+The application should require almost no learning.
+
+Everything should feel natural.
+
+---
+
+MOST IMPORTANT REQUIREMENT
+
+The application must work completely offline.
+
+Once installed, the user should be able to use every feature without an internet connection.
+
+Internet should only be required when:
+
+- downloading updates
+- optionally exporting backups
+- optionally restoring backups
+- accessing the GitHub repository (if configured)
+
+Everything else should happen locally.
+
+---
+
+HOSTING
+
+The application will be hosted on:
+
+- GitHub Repository
+- GitHub Pages
+
+Generate everything necessary so deployment requires only:
+
+git push
+
+No paid hosting.
+
+No backend server.
+
+No serverless functions.
+
+No databases requiring maintenance.
+
+---
+
+DATA STORAGE
+
+Primary Storage
+
+Store all user data locally using IndexedDB via Dexie.js.
+
+Data should remain available after:
+
+- browser restart
+- phone restart
+- offline use
+- app installation
+
+Never depend on an online database.
+
+---
+
+BACKUP SYSTEM
+
+Implement an encrypted backup system.
+
+Allow:
+
+- Create Backup
+- Restore Backup
+- Download Backup
+- Import Backup
+
+Backup format:
+
+Encrypted JSON
+
+Encryption:
+
+AES-256-GCM
+
+Everything encrypted locally.
+
+Never upload unencrypted health data anywhere.
+
+---
+
+OPTIONAL GITHUB BACKUP
+
+Design the architecture so GitHub backup can be enabled later without changing the application architecture.
+
+Do not treat GitHub as a database.
+
+Instead:
+
+Application
+
+↓
+
+Generate encrypted backup
+
+↓
+
+Upload encrypted file
+
+↓
+
+Private GitHub Repository
+
+Each backup should simply be a versioned encrypted file.
+
+Restore should:
+
+Download latest backup
+
+↓
+
+Decrypt locally
+
+↓
+
+Restore database
+
+The application must continue working even if GitHub backup is never enabled.
+
+---
+
+USER EXPERIENCE
+
+The user opens the app.
+
+Immediately sees:
+
+Current Cycle Day
+
+Next Expected Period
+
+Days Remaining
+
+Current Phase
+
+Small Calendar
+
+Quick Actions
+
+No unnecessary menus.
+
+No clutter.
+
+Everything important visible immediately.
+
+---
+
+NAVIGATION
+
+Maximum of five tabs.
+
+Home
+
+Calendar
+
+History
+
+Insights
+
+Settings
+
+Bottom navigation on phones.
+
+Sidebar on tablets.
+
+---
+
+HOME SCREEN
+
+Display:
+
+Current cycle day
+
+Current phase
+
+Days until next period
+
+Average cycle length
+
+Average period duration
+
+Next predicted period
+
+Latest note
+
+Upcoming reminder
+
+Quick add button
+
+Beautiful monthly calendar preview
+
+---
+
+CALENDAR
+
+This is the centerpiece.
+
+Requirements:
+
+Monthly view
+
+Swipe months
+
+Tap date
+
+Long press
+
+Quick add period
+
+Quick add note
+
+Quick add symptoms
+
+Color coding:
+
+Red
+
+Period
+
+Pink
+
+Predicted Period
+
+Green
+
+Ovulation
+
+Light Green
+
+Fertile Window
+
+Grey
+
+Past
+
+Neutral
+
+Future
+
+Calendar should animate smoothly.
+
+---
+
+PERIOD TRACKING
+
+User should simply press:
+
+Start Period
+
+Later
+
+End Period
+
+Everything else updates automatically.
+
+Allow editing previous periods.
+
+Allow deleting entries.
+
+---
+
+AUTOMATIC CALCULATIONS
+
+Automatically calculate:
+
+Cycle Length
+
+Average Cycle
+
+Period Length
+
+Average Period
+
+Prediction
+
+Delay
+
+Early Arrival
+
+Cycle Consistency
+
+Longest Cycle
+
+Shortest Cycle
+
+Average Delay
+
+Cycle Count
+
+Prediction Accuracy
+
+---
+
+OVULATION
+
+Estimate:
+
+Ovulation Day
+
+Fertile Window
+
+Most Fertile Days
+
+Clearly label these as predictions.
+
+Include disclaimer.
+
+---
+
+HISTORY
+
+Beautiful timeline.
+
+Example:
+
+January
+
+29 days
+
+February
+
+31 days
+
+March
+
+28 days
+
+April
+
+32 days
+
+Tap any cycle
+
+↓
+
+View details
+
+---
+
+NOTES
+
+Simple journal.
+
+Optional.
+
+Each day may include:
+
+Mood
+
+Medication
+
+Doctor Visit
+
+Symptoms
+
+Free text
+
+No complicated forms.
+
+---
+
+SYMPTOMS
+
+Simple checkboxes.
+
+Cramps
+
+Back Pain
+
+Headache
+
+Fatigue
+
+Mood Swings
+
+Acne
+
+Bloating
+
+Cravings
+
+Tender Breasts
+
+Spotting
+
+Heavy Flow
+
+Light Flow
+
+Nothing excessive.
+
+---
+
+REMINDERS
+
+Optional reminders.
+
+Expected Period
+
+Medication
+
+Hydration
+
+Doctor Appointment
+
+Custom Reminder
+
+Notification scheduling should work in the installed PWA where supported.
+
+---
+
+INSIGHTS
+
+Keep analytics simple.
+
+Average Cycle
+
+Average Period
+
+Average Delay
+
+Longest Cycle
+
+Shortest Cycle
+
+Cycles Logged
+
+Consistency Score
+
+Simple yearly overview
+
+Small charts only.
+
+No overwhelming dashboards.
+
+---
+
+DESIGN LANGUAGE
+
+Premium.
+
+Minimal.
+
+Elegant.
+
+Inspired by:
+
+Apple Health
+
+Linear
+
+Notion
+
+Google Calendar
+
+Material Design 3
+
+Avoid anything that looks clinical.
+
+---
+
+UI
+
+Rounded corners
+
+Soft shadows
+
+Excellent spacing
+
+Large touch targets
+
+Glass effects only where tasteful
+
+Subtle gradients
+
+Micro animations
+
+Fluid transitions
+
+60 FPS interactions
+
+Dark Mode
+
+Light Mode
+
+Adaptive theme
+
+Beautiful typography
+
+Loading skeletons
+
+Empty states
+
+Success animations
+
+Error animations
+
+Haptic feedback where available
+
+---
+
+ACCESSIBILITY
+
+WCAG AA
+
+Keyboard support
+
+Screen reader support
+
+Reduced motion support
+
+High contrast
+
+Large touch areas
+
+Semantic HTML
+
+---
+
+PERFORMANCE
+
+Lighthouse:
+
+Performance >95
+
+Accessibility >95
+
+Best Practices >95
+
+SEO >95
+
+PWA >100%
+
+App should load in under two seconds.
+
+---
+
+TECHNOLOGY STACK
+
+Framework
+
+Next.js (latest)
+
+Language
+
+TypeScript
+
+Styling
+
+Tailwind CSS
+
+Components
+
+shadcn/ui
+
+State
+
+Zustand
+
+Forms
+
+React Hook Form
+
+Validation
+
+Zod
+
+Animation
+
+Framer Motion
+
+Date Library
+
+date-fns
+
+Icons
+
+Lucide React
+
+Charts
+
+Recharts
+
+Database
+
+IndexedDB
+
+ORM
+
+Dexie.js
+
+PWA
+
+next-pwa
+
+Testing
+
+Vitest
+
+Playwright
+
+Formatting
+
+Prettier
+
+Linting
+
+ESLint
+
+Package Manager
+
+pnpm
+
+Version Control
+
+Git
+
+Repository
+
+GitHub
+
+Hosting
+
+GitHub Pages
+
+---
+
+PROJECT STRUCTURE
+
+Follow a scalable feature-based architecture with clear separation of concerns.
+
+Use reusable components, custom hooks, utility functions, and centralized constants.
+
+Avoid duplicated logic.
+
+Use strict TypeScript.
+
+Document all major modules.
+
+---
+
+SECURITY
+
+No analytics.
+
+No trackers.
+
+No telemetry.
+
+No cookies except essential PWA functionality.
+
+Validate every input.
+
+Sanitize all user-generated content.
+
+Encrypt backup files locally.
+
+Never expose secrets.
+
+Never require an online account.
+
+---
+
+DELIVERABLES
+
+Generate a complete production-ready project including:
+
+- Responsive UI
+- Installable PWA
+- Offline functionality
+- IndexedDB persistence
+- Backup and restore system
+- AES-256-GCM encrypted backup files
+- Complete source code
+- Clean architecture
+- Reusable components
+- Service Worker
+- Web App Manifest
+- Icons and splash screens
+- README with setup instructions
+- GitHub Pages deployment configuration
+- GitHub Actions workflow for automatic deployment
+- Sample data for testing
+- Comprehensive comments where useful
+- No placeholder code
+- No TODOs
+- No mock implementations
+
+Every feature should be fully implemented.
+
+The generated application should be immediately usable after cloning the repository, installing dependencies, and deploying to GitHub Pages.
+
+The final product should feel like a polished commercial application, prioritizing privacy, speed, simplicity, and an exceptional user experience while remaining entirely under the user's control.

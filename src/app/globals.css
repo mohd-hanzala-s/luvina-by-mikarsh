@@ -1,0 +1,250 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * Static fallback palette = Royal Purple (the default theme) in Light
+   * mode. The ThemeProvider replaces these inline after mount for the
+   * selected theme + mode — see src/lib/theme/palette.ts, which computes the
+   * same values (including Sunset Rose and Ocean Teal) at runtime.
+   */
+  :root {
+    /* Base — soft lavender-white ground with pure-white cards */
+    --background: 251 32% 98%;
+    --foreground: 221 39% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 221 39% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 221 39% 11%;
+
+    /* Brand — Royal Purple */
+    --primary: 255 89% 60%;
+    --primary-light: 257 100% 68%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 251 91% 95%;
+    --secondary-foreground: 221 39% 11%;
+    --muted: 251 75% 91%;
+    --muted-foreground: 221 18% 42%;
+
+    /* Accent — premium Champagne Gold, used sparingly */
+    --accent: 42 38% 94%;
+    --accent-foreground: 42 55% 32%;
+    --accent-strong: 42 41% 34%;
+
+    /* Lines & inputs */
+    --border: 251 25% 91%;
+    --input: 214 25% 84%;
+    --ring: 255 89% 60%;
+    --radius: 1.25rem;
+    --shadow-color: 222 40% 18%;
+
+    /* Semantic status colors — constant across themes */
+    --period: 345 85% 60%;
+    --period-foreground: 0 0% 100%;
+    --period-soft: 345 85% 60% / 0.14;
+    --predicted: 335 75% 66%;
+    --predicted-foreground: 0 0% 100%;
+    --predicted-soft: 335 75% 66% / 0.16;
+    --fertile: 130 42% 46%;
+    --fertile-foreground: 0 0% 100%;
+    --fertile-soft: 130 42% 46% / 0.14;
+    --ovulation: 160 55% 38%;
+    --ovulation-foreground: 0 0% 100%;
+    --ovulation-soft: 160 55% 38% / 0.16;
+    --success: 122 39% 49%;
+    --success-foreground: 0 0% 100%;
+    --warning: 33 100% 49%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 1 83% 63%;
+    --destructive-foreground: 0 0% 100%;
+  }
+
+  /*
+   * Dark mode = Royal Purple on a dedicated dark theme: pitch black ground,
+   * layered neutral surfaces, no shadows. Only the accent tokens change when
+   * a different theme is selected (handled at runtime by ThemeProvider).
+   */
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 16%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 257 100% 70%;
+    --primary-light: 257 100% 68%;
+    --primary-foreground: 269 22% 8%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 92%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 64%;
+
+    --accent: 42 38% 18%;
+    --accent-foreground: 42 50% 85%;
+    --accent-strong: 42 41% 74%;
+
+    --border: 0 0% 16%;
+    --input: 0 0% 20%;
+    --ring: 257 100% 70%;
+    --radius: 1.25rem;
+    --shadow-color: 0 0% 0%;
+
+    --period: 345 85% 66%;
+    --period-foreground: 0 0% 100%;
+    --period-soft: 345 85% 66% / 0.16;
+    --predicted: 335 76% 72%;
+    --predicted-foreground: 0 0% 100%;
+    --predicted-soft: 335 76% 72% / 0.16;
+    --fertile: 130 44% 56%;
+    --fertile-foreground: 0 0% 100%;
+    --fertile-soft: 130 44% 56% / 0.14;
+    --ovulation: 160 50% 52%;
+    --ovulation-foreground: 0 0% 100%;
+    --ovulation-soft: 160 50% 52% / 0.16;
+    --success: 122 40% 55%;
+    --success-foreground: 0 0% 100%;
+    --warning: 33 90% 60%;
+    --warning-foreground: 260 32% 7%;
+    --destructive: 1 78% 66%;
+    --destructive-foreground: 0 0% 100%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-muted-foreground/25;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/40;
+  }
+}
+
+@layer components {
+  /*
+   * Reusable surface for cards and containers: dedicated theme surface
+   * color, card radius, soft light-mode-only shadow. Keeps the repeated
+   * "rounded card" pattern out of individual components.
+   */
+  .surface-card {
+    @apply rounded-card border border-border/60 bg-card text-card-foreground shadow-soft;
+  }
+
+  /* Frosted glass surfaces used sparingly (headers, nav). */
+  .glass {
+    @apply border border-white/20 bg-white/70 backdrop-blur-xl;
+  }
+  .dark .glass {
+    @apply border-white/10 bg-white/5;
+  }
+
+  /* Safe-area helpers for notched phones. */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /*
+   * Applied to <html> for a few hundred ms while a personalization theme
+   * change is being applied, so the color swap reads as a smooth fade
+   * instead of a flash. Left off the rest of the time so ordinary
+   * interactions (hover, focus, opening sheets) aren't slowed down by a
+   * permanent transition on every element.
+   */
+  .theme-transitioning,
+  .theme-transitioning * {
+    transition:
+      background-color 250ms ease,
+      border-color 250ms ease,
+      color 250ms ease,
+      fill 250ms ease,
+      stroke 250ms ease !important;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+   * For long, uniformly-shaped lists (e.g. the History timeline) that can
+   * grow unbounded over years of use. Skips layout/style/paint for rows
+   * scrolled off-screen. `contain-intrinsic-size` is a placeholder size
+   * used before a row has ever been measured, so the scrollbar doesn't
+   * jump once real content is substituted in.
+   */
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 92px;
+  }
+}
+
+/* Respect user preference for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Per-app animation intensity (set from Settings → Profile). */
+[data-animation='reduced'] *,
+[data-animation='reduced'] *::before,
+[data-animation='reduced'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+[data-animation='lively'] *,
+[data-animation='lively'] *::before,
+[data-animation='lively'] *::after {
+  transition-duration: 220ms;
+}
