@@ -22,7 +22,7 @@
     "e2e:headed": "playwright test --headed",
     "icons": "node scripts/generate-icons.mjs",
     "icons:android": "node scripts/generate-android-icons.mjs",
-    "android:sync": "NEXT_PUBLIC_BASE_PATH= pnpm build && node scripts/sync-android-assets.mjs",
+    "android:sync": "npx cross-env NEXT_PUBLIC_BASE_PATH= pnpm build && node scripts/sync-android-assets.mjs",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "postinstall": "node scripts/check-env.mjs"
   },

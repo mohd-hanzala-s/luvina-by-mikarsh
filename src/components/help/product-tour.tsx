@@ -140,8 +140,8 @@ export function ProductTour() {
         return
       }
       tries += 1
-      if (tries < 20) {
-        window.setTimeout(attempt, 400)
+      if (tries < 5) {
+        window.setTimeout(attempt, 150)
       } else {
         setCentered(true)
       }

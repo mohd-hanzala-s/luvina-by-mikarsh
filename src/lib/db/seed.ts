@@ -115,5 +115,10 @@ export async function seedSampleData(): Promise<void> {
     enabled: true,
   })
 
-  await updateSettings({ onBoardingDone: true, nameCaptureDismissed: true })
+  await updateSettings({
+    onBoardingDone: true,
+    nameCaptureDismissed: true,
+    welcomeTourSeen: true,
+    productTourSeen: true,
+  })
 }

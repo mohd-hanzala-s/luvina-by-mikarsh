@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { SplashScreen } from '@/components/onboarding/splash-screen'
 import { FeaturesCard } from '@/components/onboarding/features-card'
 import { OnboardingDialog } from '@/components/onboarding/onboarding-dialog'
-import { isAndroidShell } from '@/lib/pwa'
 
 const SPLASH_SESSION_KEY = 'luvina.splash-shown'
 
@@ -73,7 +72,7 @@ export function LaunchGate({
 
   useEffect(() => {
     setMounted(true)
-    setSplashDone((done) => done || splashShownThisSession() || isAndroidShell())
+    setSplashDone((done) => done || splashShownThisSession())
   }, [])
 
   const completeSplash = () => {
@@ -84,11 +83,13 @@ export function LaunchGate({
 
   if (!mounted) return null
 
-  if (!splashDone) {
+  // Hold the splash screen until both the splash animation completes and settings are loaded from IndexedDB.
+  // This guarantees a deterministic launch flow (Splash -> Features -> Onboarding -> Home) with zero race conditions or layout flashes.
+  if (!splashDone || !settingsReady) {
     return <SplashScreen onComplete={completeSplash} />
   }
 
-  if (settingsReady && isFreshInstall) {
+  if (isFreshInstall) {
     if (!featuresDone) {
       return <FeaturesCard onContinue={() => setFeaturesDone(true)} />
     }

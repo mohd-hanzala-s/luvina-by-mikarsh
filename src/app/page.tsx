@@ -1,15 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useEffect } from 'react'
 import { format } from 'date-fns'
-import { Plus, Sparkles, CalendarDays, ShieldCheck } from 'lucide-react'
+import { Sparkles, CalendarDays, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAppData } from '@/hooks/useAppData'
 import { CycleHero } from '@/components/home/cycle-hero'
-import { MiniCalendar } from '@/components/home/mini-calendar'
-import { LatestNoteCard } from '@/components/home/latest-note-card'
-import { UpcomingReminderCard } from '@/components/home/upcoming-reminder-card'
 import { BackupNudgeBanner } from '@/components/home/backup-nudge-banner'
 import { DayDetailSheet } from '@/components/calendar/day-detail-sheet'
 import { SmartTipsCard } from '@/components/help/smart-tips-card'
@@ -17,14 +14,16 @@ import { HelpButton } from '@/components/help/contextual-help'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Logo } from '@/components/layout/logo'
+import { CompanionAvatar } from '@/components/ui/companion-avatar'
 import { seedSampleData } from '@/lib/db/seed'
-import { getNextUpcomingReminder } from '@/lib/reminders/upcoming'
 import { getGreeting, greetingWithName, hapticFeedback } from '@/lib/utils'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db/db'
+import { CompanionCard } from '@/components/help/companion-card'
+import { AuraDashboardCard } from '@/components/aura/aura-dashboard-card'
 
 export default function HomePage() {
-  const { cycleState, logs, reminders, prediction, classify, cycles, loaded, today, settings } =
+  const { cycleState, cycles, loaded, today, settings } =
     useAppData()
   const [quickAddOpen, setQuickAddOpen] = useState(false)
   const haptics = useLiveQuery(() => db.settings.get(1), [])?.hapticsEnabled ?? true
@@ -35,17 +34,10 @@ export default function HomePage() {
   const [now, setNow] = useState<Date | null>(null)
   useEffect(() => {
     setNow(new Date())
+    if (typeof window !== 'undefined' && window.location.search.includes('checkin=1')) {
+      setQuickAddOpen(true)
+    }
   }, [])
-
-  const latestNote = useMemo(() => {
-    const withNote = logs.filter((log) => log.note).sort((a, b) => (a.date < b.date ? 1 : -1))
-    return withNote[0] ?? null
-  }, [logs])
-
-  const upcoming = useMemo(
-    () => getNextUpcomingReminder(reminders, prediction?.predictedNextStart ?? null, today),
-    [reminders, prediction, today],
-  )
 
   const hasCycles = cycles.length > 0
   // Fixed fallback hour keeps the prerendered/server markup deterministic;
@@ -81,25 +73,17 @@ export default function HomePage() {
           <>
             <BackupNudgeBanner lastBackupAt={settings?.lastBackupAt ?? null} now={now} />
 
-            <SmartTipsCard />
-
             <QuickCheckInCard onTap={handleStartToday} />
 
             <div data-tour="cycle-hero">
               <CycleHero state={cycleState} />
             </div>
 
-            <section
-              data-tour="mini-calendar"
-              className="rounded-card border border-border/60 bg-card p-5 shadow-soft"
-            >
-              <MiniCalendar classify={classify} />
-            </section>
+            <CompanionCard compact />
 
-            <div data-tour="home-grid" className="grid gap-5 md:grid-cols-2">
-              <LatestNoteCard latestNote={latestNote} />
-              <UpcomingReminderCard reminder={upcoming} />
-            </div>
+            <AuraDashboardCard />
+
+            <SmartTipsCard />
           </>
         ) : (
           <section
@@ -111,7 +95,7 @@ export default function HomePage() {
               aria-hidden="true"
               className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-primary/10 blur-3xl"
             />
-              <div className="relative max-w-lg space-y-5">
+            <div className="relative max-w-lg space-y-5">
               <Logo className="size-12" />
               <div className="space-y-2">
                 <h2 className="font-display text-2xl font-semibold tracking-tight">
@@ -144,21 +128,6 @@ export default function HomePage() {
         <HomeSkeleton />
       )}
 
-      {/* Quick add floating action */}
-      <button
-        type="button"
-        aria-label="Quick add"
-        data-tour="fab"
-        onClick={handleStartToday}
-        className="pb-safe fixed bottom-24 right-5 z-40 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lifted transition-all hover:bg-primary/90 active:scale-90 lg:bottom-8"
-      >
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 rounded-full bg-primary/40 animate-pulse-ring"
-        />
-        <Plus className="size-6" strokeWidth={2.5} />
-      </button>
-
       <DayDetailSheet date={quickAddOpen ? today : null} onOpenChange={setQuickAddOpen} />
     </div>
   )
@@ -172,21 +141,16 @@ function QuickCheckInCard({ onTap }: { onTap: () => void }) {
         onClick={onTap}
         className="group relative flex w-full items-center gap-4 overflow-hidden rounded-card border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-accent/15 p-5 text-left shadow-soft transition-all hover:shadow-lifted active:scale-[0.99]"
       >
-        <span
-          aria-hidden="true"
-          className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-soft"
-        >
-          <Sparkles className="size-6" aria-hidden="true" />
-        </span>
+        <CompanionAvatar className="size-14 ring-2 ring-primary/20 shrink-0" />
         <span className="min-w-0">
           <span className="block font-display text-base font-semibold">How are you today?</span>
           <span className="mt-0.5 block text-sm text-muted-foreground">
-            Quick Check-In — takes less than 10 seconds.
+            Tap for your daily check-in with Luvi
           </span>
         </span>
         <span
           aria-hidden="true"
-          className="ml-auto shrink-0 whitespace-nowrap rounded-full bg-primary px-5 py-2.5 text-center text-sm font-semibold text-primary-foreground"
+          className="ml-auto shrink-0 whitespace-nowrap rounded-full bg-[#F43F5E] px-5 py-2.5 text-center text-sm font-semibold text-white shadow-soft transition-all hover:bg-[#E11D48] active:scale-95"
         >
           Check in
         </span>

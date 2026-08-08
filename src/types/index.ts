@@ -46,6 +46,8 @@ export interface DayLog {
   note: string | null
   medication: string | null
   doctorVisit: string | null
+  /** Base64 / Blob data URLs for attached image documentation (flow, discharge, notes). */
+  images?: string[]
   createdAt: number
   updatedAt: number
 }
@@ -129,6 +131,10 @@ export interface Settings {
   lastDriveBackupAt?: number | null
   /** Whether automatic Drive backups are enabled. */
   driveAutoBackup?: boolean
+  /** Stree Protocol emergency contact details for emergency dialing. */
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  emergencyContactRelation?: string | null
   createdAt: number
   updatedAt: number
 }

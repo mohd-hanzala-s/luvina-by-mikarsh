@@ -61,8 +61,8 @@ export function useAppData() {
     [periods, stats, settingsDefaults],
   )
   const cycleState = useMemo(
-    () => getCycleState(cycles, today, settingsDefaults),
-    [cycles, today, settingsDefaults],
+    () => getCycleState(cycles, today, settingsDefaults, stats),
+    [cycles, today, settingsDefaults, stats],
   )
   const history = useMemo(() => buildCycleHistory(cycles, today), [cycles, today])
 

@@ -40,7 +40,7 @@ export function Wordmark({
         <span className="font-display text-lg font-semibold tracking-tight">Luvina</span>
         {showSubtitle && (
           <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-accent-strong">
-            by Mikarsh
+            by&nbsp;M&nbsp;I&nbsp;K&nbsp;&Lambda;&nbsp;R&nbsp;S&nbsp;H
           </span>
         )}
       </div>

@@ -58,24 +58,24 @@ export const MOODS: { value: Mood; label: string }[] = [
   { value: 'sad', label: 'Sad' },
 ]
 
-export const SYMPTOMS: { value: Symptom; label: string }[] = [
-  { value: 'cramps', label: 'Cramps' },
-  { value: 'backPain', label: 'Back pain' },
-  { value: 'headache', label: 'Headache' },
-  { value: 'fatigue', label: 'Fatigue' },
-  { value: 'moodSwings', label: 'Mood swings' },
-  { value: 'acne', label: 'Acne' },
-  { value: 'bloating', label: 'Bloating' },
-  { value: 'cravings', label: 'Cravings' },
-  { value: 'tenderBreasts', label: 'Tender breasts' },
-  { value: 'spotting', label: 'Spotting' },
+export const SYMPTOMS: { value: Symptom; label: string; emoji?: string }[] = [
+  { value: 'cramps', label: '🌸 Cramps' },
+  { value: 'backPain', label: '🌙 Back pain' },
+  { value: 'headache', label: '☁️ Headache' },
+  { value: 'fatigue', label: '🥱 Fatigue' },
+  { value: 'moodSwings', label: '🌿 Mood swings' },
+  { value: 'acne', label: '✨ Skin glow/acne' },
+  { value: 'bloating', label: '🧸 Bloating' },
+  { value: 'cravings', label: '🍫 Cravings' },
+  { value: 'tenderBreasts', label: '🎀 Tender breasts' },
+  { value: 'spotting', label: '💧 Spotting' },
 ]
 
-export const FLOW_LEVELS: { value: FlowLevel; label: string }[] = [
-  { value: 'none', label: 'None' },
-  { value: 'light', label: 'Light' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'heavy', label: 'Heavy' },
+export const FLOW_LEVELS: { value: FlowLevel; label: string; emoji?: string }[] = [
+  { value: 'none', label: '✨ None' },
+  { value: 'light', label: '💧 Light' },
+  { value: 'medium', label: '💦 Medium' },
+  { value: 'heavy', label: '🌊 Heavy' },
 ]
 
 export const REGULARITY_OPTIONS: { value: 'regular' | 'irregular' | 'unsure'; label: string }[] = [
@@ -184,10 +184,9 @@ export const PHASE_ACCENTS: Record<string, string> = {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { href: '/', label: 'Home', icon: 'home' },
+  { href: '/about', label: 'About', icon: 'info' },
   { href: '/calendar', label: 'Calendar', icon: 'calendar' },
-  { href: '/history', label: 'History', icon: 'history' },
+  { href: '/', label: 'Home', icon: 'home' },
   { href: '/insights', label: 'Insights', icon: 'insights' },
   { href: '/settings', label: 'Settings', icon: 'settings' },
-  { href: '/about', label: 'About', icon: 'info' },
 ]

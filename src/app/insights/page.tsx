@@ -101,16 +101,20 @@ export default function InsightsPage() {
           icon={<CalendarRange className="size-4" aria-hidden="true" />}
           label="Average cycle"
           value={stats.averageCycle === null ? '—' : `${stats.averageCycle} days`}
+          info="Mean length between consecutive period start dates over your logged history."
         />
         <HighlightStat
           icon={<Target className="size-4" aria-hidden="true" />}
           label="Prediction accuracy"
           value={stats.predictionAccuracy === null ? '—' : `${stats.predictionAccuracy}%`}
+          info="Percentage of past periods that started within ±2 days of Luvina's prediction."
         />
         <div className="rounded-card border border-border/60 bg-card p-5 shadow-soft">
-          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <Gauge className="size-4" aria-hidden="true" />
-            Consistency
+          <div className="flex items-center justify-between gap-2 text-sm font-medium text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Gauge className="size-4" aria-hidden="true" />
+              Consistency
+            </div>
           </div>
           <div className="mt-3 flex items-center gap-4">
             <Ring value={stats.consistencyScore ?? 0} />
@@ -126,6 +130,16 @@ export default function InsightsPage() {
         <MiniStat label="Avg delay" value={stats.averageDelay === null ? '—' : `${stats.averageDelay} d`} />
         <MiniStat label="Longest" value={stats.longestCycle === null ? '—' : `${stats.longestCycle} d`} />
         <MiniStat label="Shortest" value={stats.shortestCycle === null ? '—' : `${stats.shortestCycle} d`} />
+      </div>
+
+      {/* Methodology & Medical Transparency Note */}
+      <div className="rounded-card border border-primary/20 bg-primary/5 p-4 text-xs text-muted-foreground">
+        <h3 className="font-medium text-foreground">How calculations work</h3>
+        <p className="mt-1 leading-relaxed">
+          All metrics are calculated locally on your device using standard statistical models.
+          Predictions adapt over time as you log more cycles. These figures are informational estimates
+          and do not constitute medical diagnosis or contraceptive advice.
+        </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2" data-tour="insights-charts">
@@ -150,18 +164,23 @@ function HighlightStat({
   icon,
   label,
   value,
+  info,
 }: {
   icon: React.ReactNode
   label: string
   value: string
+  info?: string
 }) {
   return (
     <div className="rounded-card border border-border/60 bg-card p-5 shadow-soft">
-      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        {icon}
-        {label}
+      <div className="flex items-center justify-between gap-2 text-sm font-medium text-muted-foreground">
+        <div className="flex items-center gap-2">
+          {icon}
+          {label}
+        </div>
       </div>
       <p className="mt-2 font-display text-3xl font-bold tabular-nums tracking-tight">{value}</p>
+      {info && <p className="mt-2 text-xs text-muted-foreground">{info}</p>}
     </div>
   )
 }

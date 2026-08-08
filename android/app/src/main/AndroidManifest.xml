@@ -6,35 +6,43 @@
          browser; the bundled app never fetches content from the network. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- Auto backup is off on purpose. The app's whole premise is "your data
-         never leaves this device": the WebView's local storage holds the
-         unencrypted IndexedDB (all cycle/symptom/health data) plus, when
-         Drive auto-backup is set up, the plaintext passphrase that decrypts
-         the user's Drive backup. With allowBackup="true" (the AGP default),
-         Android's cloud auto backup — and `adb backup` on older devices —
-         would silently copy all of that off-device, which is exactly what
-         the app promises not to do. If a real backup need shows up later,
-         scope it deliberately with android:dataExtractionRules /
-         android:fullBackupContent rather than re-enabling this wholesale. -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
+        android:name=".LuvinaApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Luvina">
+        android:theme="@style/Theme.Luvina.Splash">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|uiMode|density">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Luvina Aura 2x2 Home-Screen Widget Receiver -->
+        <receiver
+            android:name=".platform.LuvinaAuraWidgetProvider"
+            android:exported="true"
+            android:label="Luvina Aura Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/aura_widget_info" />
+        </receiver>
 
         <!-- The app never fetches remote content, so skip Safe Browsing's
              startup network check against Google's servers — it has nothing

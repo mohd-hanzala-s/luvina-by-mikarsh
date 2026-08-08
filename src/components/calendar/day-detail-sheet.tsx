@@ -377,14 +377,71 @@ export function DayDetailSheet({ date, onOpenChange }: DayDetailSheetProps) {
             </div>
           </section>
 
+          {/* Photo Documentation (Discharge, Flow, Test strips, Notes) */}
+          <section aria-label="Photos" className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="flex items-center gap-1.5">
+                <span>📷 Photo Documentation</span>
+                <span className="text-xs text-muted-foreground">(Discharge, Flow, Notes)</span>
+              </Label>
+              <label className="cursor-pointer inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors">
+                <span aria-hidden="true">+ Add Photo</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    const reader = new FileReader()
+                    reader.onload = async (ev) => {
+                      const dataUrl = ev.target?.result as string
+                      if (dataUrl) {
+                        const { addImage } = await import('@/lib/db/logs')
+                        await addImage(date, dataUrl)
+                        toast.success('Photo attached')
+                      }
+                    }
+                    reader.readAsDataURL(file)
+                    e.target.value = ''
+                  }}
+                />
+              </label>
+            </div>
+
+            {log?.images && log.images.length > 0 ? (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {log.images.map((imgUrl, idx) => (
+                  <div key={idx} className="group relative size-20 overflow-hidden rounded-2xl border border-border shadow-soft">
+                    <img src={imgUrl} alt={`Attachment ${idx + 1}`} className="size-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const { removeImage } = await import('@/lib/db/logs')
+                        await removeImage(date, idx)
+                        toast.success('Photo removed')
+                      }}
+                      className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                      title="Remove photo"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground italic">No photos attached for this day yet.</p>
+            )}
+          </section>
+
           {/* Journal */}
           <section aria-label="Journal" className="space-y-4">
             <div>
-              <Label htmlFor="day-note">Notes</Label>
+              <Label htmlFor="day-note">Notes &amp; Discharge Documentation</Label>
               <Textarea
                 id="day-note"
                 className="mt-2"
-                placeholder="How are you feeling?"
+                placeholder="Document your flow, discharge, symptoms, or how you feel..."
                 value={noteDraft}
                 maxLength={400}
                 onChange={(e) => setNoteDraft(e.target.value)}

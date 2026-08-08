@@ -33,27 +33,13 @@ describe('help content', () => {
   })
 
   it('tour steps reference unique selectors that exist in the app', () => {
-    const expectedSelectors = [
-      'checkin-card',
-      'cycle-hero',
-      'mini-calendar',
-      'home-grid',
-      'fab',
-      'month-grid',
-      'calendar-legend',
-      'insights-charts',
-      'settings-profile',
-      'settings-notifications',
-      'settings-backup',
-      'settings-help',
-      'settings-data',
-    ]
+    const expectedSelectors = ['checkin-card', 'fab', 'month-grid', 'settings-backup']
     const actualSelectors = TOUR_STEPS.map((s) => s.selector).filter(
       (selector): selector is string => selector !== null,
     )
     expect(actualSelectors.sort()).toEqual(expectedSelectors.sort())
 
-    const validRoutes = ['/', '/calendar', '/history', '/insights', '/settings']
+    const validRoutes = ['/', '/calendar', '/history', '/insights', '/help', '/settings']
     for (const step of TOUR_STEPS) {
       expect(validRoutes).toContain(step.route)
       expect(step.title.length).toBeGreaterThan(0)

@@ -85,40 +85,59 @@ function clamp01(v: number): number {
 
 /**
  * Mean number of days a period arrived late (positive difference between
- * actual and predicted start), computed only when enough history exists.
+ * actual and predicted start), computed in O(n) single pass.
  */
 function computeAverageDelay(periodStarts: string[]): number | null {
   if (periodStarts.length < 2) return null
+  const lengths = computeCycleLengths(periodStarts)
   const delays: number[] = []
+  let runningSum = 0
+
   for (let i = 1; i < periodStarts.length; i++) {
-    const prediction = predictNextStart(periodStarts.slice(0, i))
-    if (!prediction) continue
+    const avg = i === 1 ? 28 : Math.round(runningSum / (i - 1))
+    const prevStart = parseISO(periodStarts[i - 1])
+    const predicted = addDays(prevStart, Math.max(1, avg))
     const actual = parseISO(periodStarts[i])
-    const predicted = parseISO(prediction)
+
     if (isBefore(predicted, actual)) {
       delays.push(differenceInCalendarDays(actual, predicted))
     }
+
+    if (i - 1 < lengths.length) {
+      runningSum += lengths[i - 1]
+    }
   }
+
   return delays.length ? Math.round(mean(delays) ?? 0) : null
 }
 
 /**
- * Percentage of period arrivals that landed within ±2 days of the prediction
- * made at the time (only periods with prior history are counted).
+ * Percentage of period arrivals that landed within ±2 days of prediction,
+ * computed in O(n) single pass.
  */
 function computePredictionAccuracy(periodStarts: string[]): number | null {
   if (periodStarts.length < 3) return null
+  const lengths = computeCycleLengths(periodStarts)
   let within = 0
   let total = 0
-  for (let i = 2; i < periodStarts.length; i++) {
-    const prediction = predictNextStart(periodStarts.slice(0, i))
-    if (!prediction) continue
-    const diff = Math.abs(
-      differenceInCalendarDays(parseISO(periodStarts[i]), parseISO(prediction)),
-    )
-    total += 1
-    if (diff <= 2) within += 1
+  let runningSum = 0
+
+  for (let i = 1; i < periodStarts.length; i++) {
+    if (i >= 2) {
+      const avg = Math.round(runningSum / (i - 1))
+      const prevStart = parseISO(periodStarts[i - 1])
+      const predicted = addDays(prevStart, Math.max(1, avg))
+      const actual = parseISO(periodStarts[i])
+      const diff = Math.abs(differenceInCalendarDays(actual, predicted))
+      total += 1
+      if (diff <= 2) within += 1
+    }
+
+    if (i - 1 < lengths.length) {
+      runningSum += lengths[i - 1]
+    }
   }
+
   return total ? Math.round((within / total) * 100) : null
 }
 
@@ -169,8 +188,9 @@ export function getCycleState(
   cycles: Cycle[],
   today: string,
   settings: Pick<Settings, 'cycleLengthDefault' | 'periodLengthDefault' | 'lutealPhaseDays' | 'fertileWindowDays'>,
+  existingStats?: CycleStats,
 ): CycleState {
-  const stats = computeStats(cycles)
+  const stats = existingStats ?? computeStats(cycles)
   const periods = toPeriodSpans(cycles)
   const prediction = computePrediction(periods, stats, settings)
 

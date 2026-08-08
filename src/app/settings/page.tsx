@@ -11,14 +11,16 @@ import { DataSection } from '@/components/settings/data-section'
 import { HelpSection } from '@/components/settings/help-section'
 import { FeedbackSection } from '@/components/settings/feedback-section'
 import { AboutSection } from '@/components/settings/about-section'
+import { AuraSettingsSection } from '@/components/aura/aura-settings-section'
+import { StreeSection } from '@/components/settings/stree-section'
 import { HelpButton } from '@/components/help/contextual-help'
 
 export default function SettingsPage() {
   useEffect(() => {
-    if (window.location.hash === '#feedback') {
-      // Small delay so the DOM has painted the section
+    if (window.location.hash === '#feedback' || window.location.hash === '#aura') {
+      const targetId = window.location.hash.slice(1)
       const raf = requestAnimationFrame(() => {
-        const el = document.getElementById('feedback')
+        const el = document.getElementById(targetId)
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
@@ -43,6 +45,8 @@ export default function SettingsPage() {
       <ThemeSection />
       <PersonalSection />
       <CycleSettings />
+      <AuraSettingsSection />
+      <StreeSection />
       <NotificationsSection />
       <BackupSection />
       <DataSection />

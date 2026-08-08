@@ -55,6 +55,7 @@ export async function upsertLog(
       | 'note'
       | 'medication'
       | 'doctorVisit'
+      | 'images'
     >
   >,
 ): Promise<void> {
@@ -114,6 +115,19 @@ export async function setSleep(date: string, sleep: number | null): Promise<void
 
 export async function setHydration(date: string, hydration: HydrationLevel | null): Promise<void> {
   await upsertLog(date, { hydration })
+}
+
+export async function addImage(date: string, imageDataUrl: string): Promise<void> {
+  const existing = await db.logs.get(date)
+  const images = existing?.images ?? []
+  await upsertLog(date, { images: [...images, imageDataUrl] })
+}
+
+export async function removeImage(date: string, imageIndex: number): Promise<void> {
+  const existing = await db.logs.get(date)
+  const images = existing?.images ?? []
+  const next = images.filter((_, idx) => idx !== imageIndex)
+  await upsertLog(date, { images: next })
 }
 
 export async function deleteLog(date: string): Promise<void> {

@@ -1,7 +1,17 @@
-# Luvina release ProGuard rules.
+# Luvina R8 / ProGuard release rules.
 
-# The bundled web app is loaded from local assets and does not depend on any
-# reflection into the APK classes, so no custom keep rules are required beyond
-# the defaults. If a JavaScript bridge is added later, keep its annotated
-# methods:
-#   -keepclassmembers class * { @android.webkit.JavascriptInterface <methods>; }
+# Preserve JavaScript interface methods for WebView bridge (window.LuvinaNative)
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+# Preserve ViewBinding classes
+-keepclassmembers class * implements androidx.viewbinding.ViewBinding {
+    public static *** inflate(...);
+    public static *** bind(...);
+}
+
+# Preserve WorkManager ListenableWorker constructors for background tasks
+-keep class * extends androidx.work.ListenableWorker {
+    public <init>(...);
+}

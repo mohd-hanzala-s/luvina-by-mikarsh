@@ -70,31 +70,47 @@ function BottomNavInner({ items, currentPath }: BottomNavProps) {
   return (
     <nav
       aria-label="Main navigation"
-      className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/80 backdrop-blur-xl"
+      className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/90 backdrop-blur-xl"
     >
-      <div className="mx-auto grid max-w-md grid-cols-6 gap-1 px-2 py-1.5 sm:max-w-lg sm:gap-2 sm:px-4 sm:py-2">
+      <div className="mx-auto grid max-w-md grid-cols-5 items-center gap-1 px-2 py-1.5 sm:max-w-lg sm:px-4">
         {items.map((item) => {
           const Icon = NAV_ICONS[item.icon] ?? Home
           const active = currentPath === item.href
+          const isHome = item.icon === 'home'
+
           return (
             <Link
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex flex-col items-center gap-1 rounded-input py-1.5 text-[11px] font-medium transition-colors sm:text-xs',
-                active ? 'text-primary' : 'text-muted-foreground',
+                'flex flex-col items-center gap-1 rounded-input py-1 text-[10px] font-medium transition-colors sm:text-xs',
+                active
+                  ? isHome
+                    ? 'text-[#F43F5E] font-bold'
+                    : 'text-primary'
+                  : 'text-muted-foreground hover:text-foreground',
               )}
             >
               <span
                 className={cn(
                   'flex h-8 w-12 items-center justify-center rounded-full transition-colors sm:h-9 sm:w-14',
-                  active ? 'bg-primary/10' : '',
+                  active
+                    ? isHome
+                      ? 'bg-[#F43F5E]/15 text-[#F43F5E]'
+                      : 'bg-primary/10 text-primary'
+                    : '',
                 )}
               >
-                <Icon className="size-5 sm:size-5" strokeWidth={active ? 2.2 : 1.8} />
+                <Icon
+                  className={cn(
+                    'size-5 sm:size-5',
+                    active && isHome ? 'text-[#F43F5E]' : active ? 'text-primary' : 'text-muted-foreground',
+                  )}
+                  strokeWidth={active ? 2.3 : 1.8}
+                />
               </span>
-              {item.label}
+              <span className="truncate max-w-[64px] text-center">{item.label}</span>
             </Link>
           )
         })}

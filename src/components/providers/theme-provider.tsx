@@ -19,7 +19,7 @@ import { applyPalette, generatePalette } from '@/lib/theme/palette'
  */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const row = useLiveQuery(() => db.settings.get(1), [])
-  const preference = row?.theme ?? 'system'
+  const preference = row?.theme ?? 'light'
 
   // Only the fields that actually feed the palette — see the note above.
   const themeId = row?.themeId

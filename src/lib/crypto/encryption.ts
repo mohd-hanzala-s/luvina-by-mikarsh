@@ -91,12 +91,12 @@ export async function decryptBytes(
 
 /** Encode binary data as a base64 string (chunked to avoid call-stack limits). */
 export function bytesToBase64(bytes: Uint8Array): string {
-  let binary = ''
-  const chunk = 0x8000
-  for (let i = 0; i < bytes.length; i += chunk) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunk))
+  const chunks: string[] = []
+  const chunkSize = 0x8000
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    chunks.push(String.fromCharCode(...bytes.subarray(i, i + chunkSize)))
   }
-  return btoa(binary)
+  return btoa(chunks.join(''))
 }
 
 /** Decode a base64 string into binary data. */

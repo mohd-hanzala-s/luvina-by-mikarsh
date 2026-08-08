@@ -34,6 +34,9 @@ import { WhatsNewSheet } from '@/components/help/whats-new-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+import { PeriodHygieneGuide } from '@/components/help/period-hygiene-guide'
+import { CompanionCard } from '@/components/help/companion-card'
+
 const CATEGORIES: { value: ArticleCategory | 'all'; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'getting-started', label: 'Getting started' },
@@ -62,6 +65,7 @@ export default function HelpPage() {
   const router = useRouter()
   const setRequestProductTour = useAppStore((s) => s.setRequestProductTour)
 
+  const [activeTab, setActiveTab] = useState<'hygiene' | 'articles'>('hygiene')
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<ArticleCategory | 'all'>('all')
   const [article, setArticle] = useState<HelpArticle | null>(null)
@@ -111,37 +115,76 @@ export default function HelpPage() {
             <ArrowLeft className="size-4.5" aria-hidden="true" />
           </button>
           <div>
-            <h1 className="font-display text-2xl font-semibold tracking-tight">Help &amp; Discover</h1>
+            <h1 className="font-display text-2xl font-semibold tracking-tight">Help &amp; Educational Guides</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Guides, FAQs, tips and everything about Luvina.
+              Period care, intimate hygiene, wellness guides and FAQs from your Companion.
             </p>
           </div>
         </div>
       </header>
 
-      <div className="relative">
-        <Search
-          className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search guides, FAQ and tips… e.g. Calendar"
-          aria-label="Search help"
-          className="h-12 pl-11 pr-10"
-        />
-        {query && (
-          <button
-            type="button"
-            aria-label="Clear search"
-            onClick={() => setQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          >
-            <X className="size-4" aria-hidden="true" />
-          </button>
-        )}
+      {/* Companion Header Banner */}
+      <CompanionCard greeting="Welcome! I'm your Luvina Companion. Browse the Period & Hygiene guide below or search our Help Center anytime." />
+
+      {/* Main Tab Navigation */}
+      <div className="flex rounded-2xl border border-border/60 bg-card p-1 shadow-soft">
+        <button
+          type="button"
+          onClick={() => {
+            hapticFeedback(true)
+            setActiveTab('hygiene')
+          }}
+          className={`flex-1 rounded-xl py-2.5 text-xs font-semibold transition-all ${
+            activeTab === 'hygiene'
+              ? 'bg-primary text-primary-foreground shadow-soft'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          🌸 Period &amp; Hygiene Guide
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            hapticFeedback(true)
+            setActiveTab('articles')
+          }}
+          className={`flex-1 rounded-xl py-2.5 text-xs font-semibold transition-all ${
+            activeTab === 'articles'
+              ? 'bg-primary text-primary-foreground shadow-soft'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          📖 App Guides &amp; FAQs
+        </button>
       </div>
+
+      {activeTab === 'hygiene' ? (
+        <PeriodHygieneGuide />
+      ) : (
+        <>
+          <div className="relative">
+            <Search
+              className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search guides, FAQ and tips… e.g. Calendar"
+              aria-label="Search help"
+              className="h-12 pl-11 pr-10"
+            />
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => setQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                <X className="size-4" aria-hidden="true" />
+              </button>
+            )}
+          </div>
 
       {noResults ? (
         <EmptyState
@@ -302,6 +345,8 @@ export default function HelpPage() {
           )}
         </>
       )}
+    </>
+  )}
 
       <HelpArticleSheet
         article={article}

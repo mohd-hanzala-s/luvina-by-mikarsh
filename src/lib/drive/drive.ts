@@ -145,18 +145,41 @@ export function buildBackupUploadBody(fileName: string, payload: string): Backup
   return { body, boundary }
 }
 
+/** Search Google Drive for an existing backup file matching the given name. */
+export async function findDriveBackupFile(token: string, fileName: string): Promise<string | null> {
+  const query = encodeURIComponent(`name='${fileName}' and trashed=false`)
+  const url = `https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name)`
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { files?: { id: string }[] }
+    return data.files?.[0]?.id ?? null
+  } catch {
+    return null
+  }
+}
+
 /**
- * Upload an encrypted backup to the app's private Drive space (scope
- * `drive.file`). Returns the created file id.
+ * Upload an encrypted backup to Google Drive. Updates existing file via PATCH if present,
+ * or creates a new file via POST.
  */
 export async function uploadBackupToDrive(
   token: string,
   payload: string,
   fileName: string,
 ): Promise<string> {
+  const existingId = await findDriveBackupFile(token, fileName)
   const { body, boundary } = buildBackupUploadBody(fileName, payload)
-  const res = await fetch(DRIVE_UPLOAD_URL, {
-    method: 'POST',
+
+  const url = existingId
+    ? `https://www.googleapis.com/upload/drive/v3/files/${existingId}?uploadType=multipart`
+    : DRIVE_UPLOAD_URL
+  const method = existingId ? 'PATCH' : 'POST'
+
+  const res = await fetch(url, {
+    method,
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': `multipart/related; boundary=${boundary}`,

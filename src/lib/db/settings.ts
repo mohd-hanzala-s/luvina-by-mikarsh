@@ -12,7 +12,7 @@ export const SETTINGS_ROW_ID = 1
 
 const DEFAULT_SETTINGS_ROW: Settings = {
   id: SETTINGS_ROW_ID,
-  theme: 'system',
+  theme: 'light',
   cycleLengthDefault: DEFAULT_SETTINGS.cycleLengthDefault,
   periodLengthDefault: DEFAULT_SETTINGS.periodLengthDefault,
   lutealPhaseDays: DEFAULT_SETTINGS.lutealPhaseDays,
